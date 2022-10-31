@@ -1,0 +1,72 @@
+<form name="cal" action="">
+    <table>
+      <caption>
+        <h1>
+          Kalkulator
+        </h1>
+        <h3>
+          Paket Wisata Imam Tour
+        </h3>
+      </caption>
+      <tr>
+        <td>Nama Paket Tour</td>
+        <td>:</td>
+        <td>
+          <select name="paket">
+            <option selected disabled>...</option>
+            <option value="Bali">Paket Tour Bali</option>
+            <option value="Korea">Paket Tour Korea</option>
+            <option value="Eropa">Paket Tour Eropa</option>
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <td>Harga Paket</td>
+        <td>:</td>
+        <td>Rp.<input id="harga" name="harga" type="number" value="0" readonly></td>
+      </tr>
+      <tr>
+        <td>Diskon</td>
+        <td>:</td>
+        <td><input name="diskon" type="number" min="0" value="0">%</td>
+      </tr>
+      <tr>
+        <td>Total Bayar</td>
+        <td>:</td>
+        <td><input id="tot" name="tot" type="text" value="0.00" readonly></td>
+      </tr>
+    </table>
+  </form>
+
+  <script>
+    const form = document.forms['cal'];
+
+    const hargaMap = {
+    Bali: 700000,
+    Korea: 1500000,
+    Eropa: 4000000
+    };
+
+    const main = () => {
+    form.elements.paket.addEventListener('change', onPaketChange);
+    form.elements.diskon.addEventListener('change', onDiskonChange);
+    form.elements.diskon.addEventListener('input', onDiskonChange);
+    };
+
+    const applyDiscount = (amount, discount) => amount - (amount * discount);
+
+    const onPaketChange = e => {
+    form.elements.harga.value = hargaMap[e.target.value] || 0;
+    const harga = parseInt(form.elements.harga.value || '0', 10);
+    const diskon = parseInt(form.elements.diskon.value || '0', 10) / 100;
+    form.elements.tot.value = applyDiscount(harga, diskon).toFixed(2);
+    };
+
+    const onDiskonChange = e => {
+    const harga = parseInt(form.elements.harga.value || '0', 10);
+    const diskon = parseInt(form.elements.diskon.value || '0', 10) / 100;
+    form.elements.tot.value = applyDiscount(harga, diskon).toFixed(2);
+    };
+
+    main();
+  </script>

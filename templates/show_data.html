@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+{% block body %}
+
+    <h2> <center>Pangkalan Data</center> </h2>
+
+    
+    {% for data in dataset %}
+        <p> {{ data.buyer_name }}</p>
+
+    {% endfor %}
+    
+
+{% endblock %}

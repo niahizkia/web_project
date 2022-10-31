@@ -1,0 +1,158 @@
+{% extends "layout.html" %}
+{% block body %}
+
+    <h2> <center>Cashier</center> </h2>
+
+    <form action="{{url_for('input_product')}}" class='form' method="post" name="input_product">
+      <p class='field required'>
+        <label class='label required' for='name'>Nama</label>
+        <input class='text-input' id='name' name='name' required type='text' value=''>
+      </p>
+      <p class='field required half'>
+        <label class='label' for='alamat'>Alamat</label>
+        <input class='text-input' name='alamat' required type='text'>
+      </p>
+      <p class='field half'>
+        <label class='label' for='phone'>No Hp</label>
+        <input class='text-input' id='phone' name='phone' type='phone'>
+      </p>
+      <p class='field half required'>
+        <label class='label' for='kota'>Kota</label>
+        <input class='text-input' id='kota' name='kota' required type='text'>
+      </p>
+      <p class='field half'>
+        <label class='label' for='select'>Provinsi</label>
+        <select class='select' id='select' name='provinsi'>
+          <option selected value=''></option>
+          <option value='Aceh'>Aceh</option>
+          <option value='Sumatra Utara'>Sumatra Utara</option>
+          <option value='Sumatra Barat'>Sumatra Barat</option>
+          <option value='Riau'>Riau</option>
+          <option value='Kepulauan Riau'>Kepulauan Riau</option>
+          <option value='Jambi'>Jambi</option>
+          <option value='Bengkulu'>Bengkulu</option>
+          <option value='Sumatra Selatan'>Sumatra Selatan</option>
+          <option value='Kepulauan Bangka Belitung'>Kepulauan Bangka Belitung</option>
+          <option value='Lampung'>Lampung</option>
+          <option value='Banten'>Banten</option>
+          <option value='Daerah Khusus Ibukota Jakarta'>Daerah Khusus Ibukota Jakarta</option>
+          <option value='Jawa Barat'>Jawa Barat</option>
+          <option value='Jawa Tengah'>Jawa Tengah</option>
+          <option value='Daerah Istimewa Yogyakarta'>Daerah Istimewa Yogyakarta</option>
+          <option value='Jawa Timur'>Jawa Timur</option>
+          <option value='Bali'>Bali</option>
+          <option value='Nusa Tenggara Barat'>Nusa Tenggara Barat</option>
+          <option value='Nusa Tenggara Timur'>Nusa Tenggara Timur</option>
+          <option value='Kalimantan Barat'>Kalimantan Barat</option>
+          <option value='Kalimantan Tengah'>Kalimantan Tengah</option>
+          <option value='Kalimantan Timur'>Kalimantan Timur</option>
+          <option value='Kalimantan Selatan'>Kalimantan Selatan</option>
+          <option value='Kalimantan Utara'>Kalimantan Utara</option>
+          <option value='Sulawesi Barat'>Sulawesi Barat</option>
+          <option value='Sulawesi Selatan'>Sulawesi Selatan</option>
+          <option value='Sulawesi Tenggara'>Sulawesi Tenggara</option>
+          <option value='Sulawesi Tengah'>Sulawesi Tengah</option>
+          <option value='Gorontalo'>Gorontalo</option>
+          <option value='Sulawesi Utara'>Sulawesi Utara</option>
+          <option value='Maluku Utara'>Maluku Utara</option>
+          <option value='Maluku'>Maluku</option>
+          <option value='Papua Barat'>Papua Barat</option>
+          <option value='Papua'>Papua</option>
+          <option value='Papua Tengah'>Papua Tengah</option>
+          <option value='Papua Pegunungan'>Papua Pegunungan</option>
+          <option value='Papua Selatan'>Papua Selatan</option>
+        </select>
+      </p>
+      <div class="field">        
+        
+      </div>
+      <div class='field'>
+        <label class='label'>Product</label>
+        <select class='select' id='select' name='product'>
+          <option selected value=''></option>
+          <option value='FP100TBT'> Fumiphos 100tbt</option>
+          <option value='FP500TBT'> Fumiphos 500tbt</option>
+          <option value='FP001DUS'>Fumiphos 1dus</option>
+          <option value='SG100ML'> Silogud 100ml</option>
+          <option value='SG001LTR'> Silogud 1L</option>
+          <option value='SG005LTR'> Silogud 5L</option>
+          <option value='SG001DUS'> Silogud 1dus</option>
+          <option value='FL007KG'> Fumilikuid 7kg</option>
+          <option value='MFFF1C1'> Masker Fumigasi Fullface+Canister</option>
+          <option value='CANIFIL'> Canister/Filter</option>
+          <option value='MFHF1C1'> Masker Fumigasi Halfface+Canister</option>
+        </select>
+      </div>
+
+      <!-- <p class='field'>
+        <label class='label' for='about'>Tanggal</label>
+        <textarea class='textarea' cols='50' id='about' name='tanggal' rows='4'></textarea>
+      </p> -->
+
+      <p class='field half'>
+        <label class='label'>Jumlah</label>
+        <input type="number" id="quantity" name="quantity" class="number" min="1" max="100" step="1" value="1">
+      </p>
+
+      <p class='field half'>
+        <label class='label'>Harga</label>
+        <input id="price" name="price" type="text" class='text-input' value="0" readonly>
+      </p>
+
+      <p class='field'>
+        <label class='label'>Total</label>
+        <input type="text" id="total" name="total" class='text-input' value="0.00" readonly>
+      </p>
+
+      <p class='field half'>
+        <input class='button' type='submit' value='Submit'>
+      </p>
+    </form>
+
+    <script>
+      const form = document.forms['input_product'];
+      
+      const priceMap = {
+        FP100TBT: 335000,
+        FP500TBT: 750000,
+        FP001DUS: 6200000,
+        SG100ML : 75000,
+        SG001LTR: 290000,
+        SG005LTR: 910000,
+        SG001DUS: 3300000,
+        FL007KG : 2240000,
+        MFFF1C1 : 2700000,
+        CANIFIL : 750000,
+        MFHF1C1 : 1065000
+        };
+
+
+    const main = () => {
+    form.elements.product.addEventListener('change', onProductChange);
+    form.elements.quantity.addEventListener('change', onQuantityChange);
+    form.elements.quantity.addEventListener('input', onQuantityChange);
+    };
+
+    const applyTotalPrice = (amount, price) => (amount * price);
+
+    const onProductChange = e => {
+    form.elements.price.value = priceMap[e.target.value] || 0;
+    const price = parseInt(form.elements.price.value || '0', 10);
+    const quantity = parseInt(form.elements.quantity.value || '0', 10);
+    form.elements.total.value = applyTotalPrice(price, quantity).toFixed(2);
+    };
+
+    const onQuantityChange = e => {
+    // form.elements.price.value = priceMap[e.target.value] || 0;
+    const price = parseInt(form.elements.price.value || '0', 10);
+    const quantity = parseInt(form.elements.quantity.value || '0', 10);
+    form.elements.total.value = applyTotalPrice(price, quantity).toFixed(2);
+    };
+
+    main();
+
+    </script>
+    
+    
+
+{% endblock %}
