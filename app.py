@@ -1,5 +1,3 @@
-from tkinter import *
-from tkinter import filedialog
 import datetime
 from functools import wraps
 
@@ -104,7 +102,6 @@ def export():
 
     df = pd.DataFrame(sql_query)
     df = df.to_excel(r'/home/niahizkia/projects/web_project/static/file/export.xlsx', index = False) # place 'r' before the path name
-    df = filedialog.asksaveasfile(defaultextension='.xlsx')
     return render_template('index.html')
 
 
