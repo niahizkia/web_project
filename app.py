@@ -168,6 +168,7 @@ def input_product():
             quantity        = request.form['quantity'],
             total          = request.form['total'],
         )
+        export()
         flash('Data berhasil di input')
             # auth_user(user)
         return redirect(url_for('input_product'))
