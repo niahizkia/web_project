@@ -87,11 +87,6 @@ def login_fulfill(f):
         return f(*args, **kwargs)
     return decorated_function
 
-# ==========================================================================================
-# ========= ROOTING AUTHENTICATION =========================================================
-# ==========================================================================================
-
-@app.route('/export')
 def export():
     con = database
     # cursor = config.cursor()
@@ -103,6 +98,10 @@ def export():
     df = pd.DataFrame(sql_query)
     df = df.to_excel(r'/home/niahizkia/projects/web_project/static/file/export.xlsx', index = False) # place 'r' before the path name
     return render_template('index.html')
+    
+# ==========================================================================================
+# ========= ROOTING AUTHENTICATION =========================================================
+# ==========================================================================================
 
 
 @app.route('/login', methods=['GET','POST'])
@@ -165,8 +164,9 @@ def input_product():
             city           = request.form['kota'],
             phone_number   = request.form['phone'],
             bought_product = request.form['product'],
-            quantity        = request.form['quantity'],
+            quantity       = request.form['quantity'],
             total          = request.form['total'],
+            sold_at        = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
         )
         export()
         flash('Data berhasil di input')
@@ -177,9 +177,14 @@ def input_product():
         #     flash('Username already exist')
     return render_template('index.html')
 
+from flask_paginate import Pagination, get_page_parameter
 
+ROWS_PER_PAGE = 5
 @app.route('/database', methods=['GET'])
 @login_required
 def show_data():
-    dataset = (Sold.select().order_by(Sold.sold_at.desc()))
+    page = request.args.get(get_page_parameter(), type=int, default=1)
+    data = (Sold.select().order_by(Sold.sold_at.desc()))
+    dataset = data.query.all()
+    # data_page = Pagination(page=page, per_page=ROWS_PER_PAGE, record_name ='dataset')
     return render_template('show_data.html', dataset=dataset)
