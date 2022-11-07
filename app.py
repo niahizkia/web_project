@@ -1,7 +1,7 @@
 import datetime
 from functools import wraps
 
-from flask import Flask, render_template, request, redirect, url_for, session, flash, abort
+from flask import Flask, render_template, request, redirect, url_for, session, flash, g
 from peewee import *
 from hashlib import md5
 import pandas as pd
@@ -177,14 +177,31 @@ def input_product():
         #     flash('Username already exist')
     return render_template('index.html')
 
-from flask_paginate import Pagination, get_page_parameter
+from flask_paginate import Pagination, get_page_args
 
-ROWS_PER_PAGE = 5
-@app.route('/database', methods=['GET'])
+@app.route('/database/', methods=['GET'])
 @login_required
 def show_data():
-    page = request.args.get(get_page_parameter(), type=int, default=1)
-    data = (Sold.select().order_by(Sold.sold_at.desc()))
-    dataset = data.query.all()
-    # data_page = Pagination(page=page, per_page=ROWS_PER_PAGE, record_name ='dataset')
-    return render_template('show_data.html', dataset=dataset)
+    data = pd.read_excel('static/file/export.xlsx')
+    total = len(data)
+
+    # page = request.args.get(get_page_parameter(), type=int, default=1)
+    page, per_page, offset = get_page_args(per_page_parameter="pp", pp=5)
+
+    # g.cur.execute(sql)
+    if per_page:
+        users = Sold.select().order_by(Sold.sold_at.desc()).limit(5).offset(offset)
+    else:
+        users = Sold.select().order_by(Sold.sold_at.desc())
+    
+    pagination = Pagination(page=page, 
+                            total=total, 
+                            record_name='users', 
+                            per_page=per_page,
+                            format_total=True,
+                            format_number=True,)
+
+    return render_template('show_data.html',
+                           users=users,
+                           pagination=pagination,
+                           )
