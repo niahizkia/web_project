@@ -196,7 +196,7 @@ def show_data():
     
     pagination = Pagination(page=page, 
                             total=total, 
-                            record_name='users', 
+                            record_name='data', 
                             per_page=per_page,
                             format_total=True,
                             format_number=True,)

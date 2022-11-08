@@ -1,51 +1,71 @@
 {% extends "layout.html" %}
 {% block body %}
 
-    <h2> <center>Pangkalan Data</center> </h2>
+    <br>
+    <h3> <center>Pangkalan Data</center> </h3>
 
-      <hr>
-      <br>
-      {{ pagination.info }}
-      <div class="table-responsive">
-        <table class="table table-sm table-borderless mb-0">
-            <thead class="thead-dark">
-                <tr>
-                    <th>#</th>
-                    <th>Tanggal</th>
-                    <th>Nama</th>
-                    <th>Alamat</th>
-                    <th>Kota</th>
-                    <th>Provinsi</th>
-                    <th>No Hp</th>
-                    <th>Produk</th>
-                    <th>Jumlah</th>
-                    <th>Total</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for user in users %}
-                <tr>
-                    <td>{{ loop.index + pagination.skip }}</td>
-                    <td>{{ user.sold_at }}</td>
-                    <td>{{ user.buyer_name }}</td>
-                    <td>{{ user.buyer_address }}</td>
-                    <td>{{ user.city }}</td>
-                    <td>{{ user.region }}</td>
-                    <td>{{ user.phone_number }}</td>
-                    <td>{{ user.bought_product }}</td>
-                    <td>{{ user.quantity }}</td>
-                    <td>{{ user.total }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
+    <div class="table100 ver1 m-b-110">
+        {{ pagination.info }}
+        <table data-vertable="ver1">
+        <thead>
+        <tr class="row100 head">
+        <th class="column100 column1" data-column="column1">#</th>
+        <th class="column100 column2" data-column="column2">Tanggal</th>
+        <th class="column100 column3" data-column="column3">Nama</th>
+        <th class="column100 column4" data-column="column4">Alamat</th>
+        <th class="column100 column5" data-column="column5">Kota</th>
+        <th class="column100 column6" data-column="column6">Provinsi</th>
+        <th class="column100 column7" data-column="column7">No.Hp</th>
+        <th class="column100 column8" data-column="column8">Produk</th>
+        <th class="column100 column9" data-column="column9">Jumlah</th>
+        <th class="column100 column10" data-column="column10">Total</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+        <tr class="row100">        
+            <td class="column100 column1" data-column="column1">{{ loop.index + pagination.skip }}</td>
+            <td class="column100 column2" data-column="column2">{{ user.sold_at }}</td>
+            <td class="column100 column3" data-column="column3">{{ user.buyer_name }}</td>
+            <td class="column100 column4" data-column="column4">{{ user.buyer_address }}</td>
+            <td class="column100 column5" data-column="column5">{{ user.city }}</td>
+            <td class="column100 column6" data-column="column6">{{ user.region }}</td>
+            <td class="column100 column7" data-column="column7">{{ user.phone_number }}</td>
+            <td class="column100 column8" data-column="column8">{{ user.bought_product }}</td>
+            <td class="column100 column9" data-column="column9">{{ user.quantity }}</td>
+            <td class="column100 column10" data-column="column10">{{ user.total }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
         </table>
-      </div>
-      {{ pagination.links }}
+    </div>
+    {{ pagination.links }}
     
-    <a href="/static/file/export.xlsx" download="w3logo">
+    <a href="/static/file/export.xlsx" class="btn btn-primary">
         Download file
     </a>
 
     
-
+    <script type="text/javascript">
+        (function ($) {
+        "use strict";
+        $('.column100').on('mouseover',function(){
+        var table1 = $(this).parent().parent().parent();
+        var table2 = $(this).parent().parent();
+        var verTable = $(table1).data('vertable')+"";
+        var column = $(this).data('column') + "";
+        $(table2).find("."+column).addClass('hov-column-'+ verTable);
+        $(table1).find(".row100.head ."+column).addClass('hov-column-head-'+ verTable);
+        });
+        $('.column100').on('mouseout',function(){
+        var table1 = $(this).parent().parent().parent();
+        var table2 = $(this).parent().parent();
+        var verTable = $(table1).data('vertable')+"";
+        var column = $(this).data('column') + "";
+        $(table2).find("."+column).removeClass('hov-column-'+ verTable);
+        $(table1).find(".row100.head ."+column).removeClass('hov-column-head-'+ verTable);
+        });
+        })(jQuery);
+    </script>    
+    
 {% endblock %}
