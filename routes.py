@@ -1,46 +1,11 @@
 import datetime
 from functools import wraps
 
-from flask import Flask, render_template, request, redirect, url_for, session, flash, g
-from peewee import *
+from flask import render_template, request, redirect, url_for, session, flash
 from hashlib import md5
 import pandas as pd
-
-
-app = Flask(__name__)
-app.secret_key = 'jdfjnviuhd87432fdjkfa.kjfj'
-
-
-DATABASE = 'product.db'
-database = SqliteDatabase(DATABASE)
-
-
-
-
-class BaseModel(Model):
-    class Meta:
-        database = database
-
-class User(BaseModel):
-    username = CharField(unique = True)
-    password = CharField()
-    join_at  = DateTimeField(default=datetime.datetime.now())
-
-class Product(BaseModel):
-    product_id    = CharField(unique = True)
-    product_name  = TextField()
-    price         = IntegerField()
-
-class Sold(BaseModel):
-    buyer_name     = TextField()
-    buyer_address  = TextField()
-    region         = TextField()
-    city           = TextField()
-    phone_number   = TextField()
-    sold_at        = DateTimeField(default=datetime.datetime.now())
-    bought_product = TextField()
-    quantity       = IntegerField()
-    total          = IntegerField()
+from models import User, Sold
+from flask_app import app, database
 
 
 
@@ -54,9 +19,7 @@ def after_request(response):
     return response
 
 
-def create_tables():
-    with database:
-        database.create_tables([Sold])
+
 
 
 # ==========================================================================================
@@ -114,7 +77,8 @@ def login():
                             (User.username == request.form['username']) &
                             (User.password == hashed_pass))
         except User.DoesNotExist:
-            flash('Username or password is wrong!')
+            msg = "Username or password is wrong!"
+            return render_template('login.html', message=msg)
 
         else:
             auth_user(user)
