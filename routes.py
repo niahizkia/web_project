@@ -50,17 +50,19 @@ def login_fulfill(f):
         return f(*args, **kwargs)
     return decorated_function
 
+@app.route('/download', methods = ['GET', 'POST'])
 def export():
     con = database
     # cursor = config.cursor()
-    sql_query = pd.read_sql_query("""
-    SELECT * FROM Sold
-    """, con)
-
-
+    sql_query = pd.read_sql_query("""SELECT * FROM Sold""", con)
+    from_date = request.form['from_date']
+    to_date = request.form['to_date']
+    to_date = to_date+' 23:59:59'
+    
     df = pd.DataFrame(sql_query)
-    df = df.to_excel(r'/home/niahizkia/projects/web_project/static/file/export.xlsx', index = False) # place 'r' before the path name
-    return render_template('index.html')
+    filtered_df = df.loc[(df['sold_at'] >= from_date) & (df['sold_at'] <= to_date)]
+    filtered_df.to_excel(r'/home/niahizkia/projects/web_project/static/file/export.xlsx', index = False) # place 'r' before the path name
+    return redirect(url_for('static', filename='file/export.xlsx'))
     
 # ==========================================================================================
 # ========= ROOTING AUTHENTICATION =========================================================
@@ -92,7 +94,6 @@ def login():
 @app.route('/logout')
 def logout():
     session.pop('logged_in', None)
-    flash('Log out success..')
     return redirect(url_for('login'))
 
 
@@ -130,9 +131,9 @@ def input_product():
             bought_product = request.form['product'],
             quantity       = request.form['quantity'],
             total          = request.form['total'],
-            sold_at        = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
+            sold_at        = datetime.datetime.now().strftime("%Y-%m-%d")
         )
-        export()
+        # export()
         flash('Data berhasil di input')
             # auth_user(user)
         return redirect(url_for('input_product'))
@@ -146,13 +147,11 @@ from flask_paginate import Pagination, get_page_args
 @app.route('/database/', methods=['GET'])
 @login_required
 def show_data():
-    data = pd.read_excel('static/file/export.xlsx')
+    data = Sold.select().order_by(Sold.sold_at.desc())
     total = len(data)
 
-    # page = request.args.get(get_page_parameter(), type=int, default=1)
     page, per_page, offset = get_page_args(per_page_parameter="pp", pp=5)
 
-    # g.cur.execute(sql)
     if per_page:
         users = Sold.select().order_by(Sold.sold_at.desc()).limit(5).offset(offset)
     else:

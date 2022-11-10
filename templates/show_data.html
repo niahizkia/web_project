@@ -40,10 +40,26 @@
         </table>
     </div>
     {{ pagination.links }}
+    <br>
+    <form action="{{url_for('export')}}" method="post">
+        <div class="date_table" style="padding-left: 2em; padding-right: 50em;">
+            <table >
+                <tr>
+                    <th><label for="">From:</label> </th>
+                    <th><label for=""> To: </label> </th>
+                </tr>
+                <tr>
+                    <td><input type="date" name="from_date" placeholder="yyyy-mm-dd"></td>
+                    <td><input type="date" name="to_date" placeholder="yyyy-mm-dd"></td>
+                    <td><input type="submit" value="export" class="btn btn-primary"></td>
+                </tr>
+            </table>
+        </div>
+        
+    </form>
+    <br>
+
     
-    <a href="/static/file/export.xlsx" class="btn btn-primary">
-        Download file
-    </a>
 
     
     <script type="text/javascript">
