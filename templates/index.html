@@ -144,7 +144,6 @@
     };
 
     const onQuantityChange = e => {
-    // form.elements.price.value = priceMap[e.target.value] || 0;
     const price = parseInt(form.elements.price.value || '0', 10);
     const quantity = parseInt(form.elements.quantity.value || '0', 10);
     form.elements.total.value = applyTotalPrice(price, quantity).toFixed(2);

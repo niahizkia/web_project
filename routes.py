@@ -6,7 +6,7 @@ from hashlib import md5
 import pandas as pd
 from models import User, Sold
 from flask_app import app, database
-
+from flask_paginate import Pagination, get_page_args
 
 
 @app.before_request
@@ -17,9 +17,6 @@ def before_request():
 def after_request(response):
     database.close()
     return response
-
-
-
 
 
 # ==========================================================================================
@@ -67,13 +64,9 @@ def login():
         except User.DoesNotExist:
             msg = "Username or password is wrong!"
             return render_template('login.html', message=msg)
-
         else:
             auth_user(user)
-            # current_user = get_current_user()
-            # return current_user.username
             return redirect(url_for('input_product')) 
-
     return render_template('login.html')
 
 
@@ -99,8 +92,8 @@ def register():
 
         except IntegrityError:
             flash('Username already exist')
-
     return render_template('register.html')
+
 
 @app.route('/', methods=['POST','GET'])
 @login_required
@@ -115,12 +108,11 @@ def input_product():
             bought_product = request.form['product'],
             quantity       = request.form['quantity'],
             total          = request.form['total'],
-            sold_at        = datetime.datetime.now().strftime("%Y-%m-%d")
+            sold_at        = datetime.datetime.now().strftime("%Y-%m-%d, %H:%M")
         )
         return redirect(url_for('input_product'))
     return render_template('index.html')
 
-from flask_paginate import Pagination, get_page_args
 
 @app.route('/database/', methods=['GET', 'POST'])
 @login_required
@@ -135,17 +127,10 @@ def show_data():
     else:
         users = Sold.select().order_by(Sold.sold_at.desc())
     
-    pagination = Pagination(page=page, 
-                            total=total, 
-                            record_name='data', 
-                            per_page=per_page,
-                            format_total=True,
-                            format_number=True,)
+    pagination = Pagination(page=page, total=total, record_name='data', 
+                            per_page=per_page, format_total=True, format_number=True)
 
-    return render_template('show_data.html',
-                           users=users,
-                           pagination=pagination,
-                           )
+    return render_template('show_data.html', users=users, pagination=pagination)
 
 @app.route('/download', methods = ['GET', 'POST'])
 def export():
@@ -172,8 +157,7 @@ def edit_product():
 
 
 @app.route('/update/<int:user_id>', methods=['POST','GET'])
-def update(user_id):
-    
+def update(user_id):    
     if request.method == 'POST':
         user = Sold.select().where(Sold.id == user_id).get()
         user.buyer_name     = request.form['name']
@@ -184,7 +168,6 @@ def update(user_id):
         user.bought_product = request.form['product']
         user.quantity       = request.form['quantity']
         user.total          = request.form['total']
-        # sold_at        = datetime.datetime.now().strftime("%Y-%m-%d")
         user.save()
         return redirect(url_for('show_data'))
     else:
@@ -193,7 +176,6 @@ def update(user_id):
 
 @app.route('/delete/<int:user_id>', methods=['POST','GET'])
 def delete(user_id):
-
     user = Sold.get(Sold.id == user_id)
     user.delete_instance()
     return redirect(url_for('show_data'))
