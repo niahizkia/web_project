@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+{% block body %}
+    <label for="">Apakah anda yakin untuk MENGHAPUS secara permanen?</label>
+    <table>
+        <th style="width: 50px;">
+            <form action="{{url_for('.delete', user_id=user_id)}}" method="post">
+                <input type="submit" value="Hapus" class="btn btn-danger btn-sm">
+            </form>
+        </th>
+        <th>
+            <form action="{{url_for('show_data')}}" method="post">
+                <input type="submit" value="Batal" class="btn btn-secondary btn-sm">
+            </form>
+        </th>    
+    
+    </table>
+
+{% endblock %}

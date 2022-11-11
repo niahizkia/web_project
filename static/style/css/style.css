@@ -223,7 +223,7 @@ body {
 [ Ver1 ] */
 .table100.ver1 td {
   font-family: Montserrat-Regular;
-  font-size: 15px;
+  font-size: 16px;
   color: #5e5e5e;
   line-height: 1.4;
   }
@@ -290,13 +290,39 @@ width: 130px;
 padding-left: 25px;
 }
 .column100.column1 {
-width: 65px;
-padding-left: 42px;
+width: 25px;
+padding-left: 10px;
 }
+.column100.column2 {
+  width: 95px;
+  padding-left: 10px;
+}
+
+.column100.column5 {
+  width: 45px;
+  padding-left: 15px;
+}
+
+.column100.column8 {
+  width: 45px;
+  padding-left: 15px;
+}
+
 .column100.column9 {
-width: 65px;
-padding-left: 42px;
+width: 40px;
+padding-left: 15px;
 }
+
+.column100.column10 {
+  width: 40px;
+  padding-left: 15px;
+}
+
+.column100.column11 {
+  width: 35px;
+  padding-left: 15px;
+}
+
 .row100.head th {
 padding-top: 24px;
 padding-bottom: 20px;

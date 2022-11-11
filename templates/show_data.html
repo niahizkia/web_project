@@ -20,6 +20,7 @@
         <th class="column100 column9" data-column="column9">Jumlah</th>
         <th class="column100 column10" data-column="column10">Total</th>
         <th class="column100 column11" data-column="column11">Action</th>
+        <th class="column100 column11" data-column="column11"></th>
         </tr>
         </thead>
         <tbody>
@@ -35,9 +36,18 @@
             <td class="column100 column8" data-column="column8">{{ user.bought_product }}</td>
             <td class="column100 column9" data-column="column9">{{ user.quantity }}</td>
             <td class="column100 column10" data-column="column10">{{ user.total }}</td>
-            <form action="{{url_for('edit_product')}}" method="post">
-                <td class="column100 column11" data-column="column11"> <input type="hidden" name="user_id" value="{{ user.id }}" ><input type="submit" value="Edit" class="btn btn-secondary btn-sm"> </td>
-            </form>
+            <td class="column100 column11" data-column="column11">
+                <form action="{{url_for('edit_product')}}" method="post">
+                    <input type="hidden" name="user_id" value="{{ user.id }}" >
+                    <input type="submit" value="Edit" class="btn btn-secondary btn-sm"> 
+                </form>
+            </td>
+            <td class="column100 column11" data-column="column11">
+                <form action="{{url_for('confirmation')}}" method="post">
+                    <input type="hidden" name="user_id" value="{{ user.id }}" >
+                    <input type="submit" value="Hapus" class="btn btn-danger btn-sm">
+                </form>
+            </td>
         </tr>
         {% endfor %}
         </tbody>

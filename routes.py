@@ -122,7 +122,7 @@ def input_product():
 
 from flask_paginate import Pagination, get_page_args
 
-@app.route('/database/', methods=['GET'])
+@app.route('/database/', methods=['GET', 'POST'])
 @login_required
 def show_data():
     data = Sold.select().order_by(Sold.sold_at.desc())
@@ -170,6 +170,7 @@ def edit_product():
     )
     return render_template('edit.html', user=user)
 
+
 @app.route('/update/<int:user_id>', methods=['POST','GET'])
 def update(user_id):
     
@@ -188,3 +189,17 @@ def update(user_id):
         return redirect(url_for('show_data'))
     else:
         return render_template('show_data.html')
+
+
+@app.route('/delete/<int:user_id>', methods=['POST','GET'])
+def delete(user_id):
+
+    user = Sold.get(Sold.id == user_id)
+    user.delete_instance()
+    return redirect(url_for('show_data'))
+
+
+@app.route('/confirmation', methods=['POST','GET'])
+def confirmation():
+    user_id = request.form['user_id']
+    return render_template('delete.html', user_id=user_id)
