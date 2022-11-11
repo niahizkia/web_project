@@ -50,20 +50,6 @@ def login_fulfill(f):
         return f(*args, **kwargs)
     return decorated_function
 
-@app.route('/download', methods = ['GET', 'POST'])
-def export():
-    con = database
-    # cursor = config.cursor()
-    sql_query = pd.read_sql_query("""SELECT * FROM Sold""", con)
-    from_date = request.form['from_date']
-    to_date = request.form['to_date']
-    to_date = to_date+' 23:59:59'
-    
-    df = pd.DataFrame(sql_query)
-    filtered_df = df.loc[(df['sold_at'] >= from_date) & (df['sold_at'] <= to_date)]
-    filtered_df.to_excel(r'/home/niahizkia/projects/web_project/static/file/export.xlsx', index = False) # place 'r' before the path name
-    return redirect(url_for('static', filename='file/export.xlsx'))
-    
 # ==========================================================================================
 # ========= ROOTING AUTHENTICATION =========================================================
 # ==========================================================================================
@@ -120,8 +106,6 @@ def register():
 @login_required
 def input_product():
     if request.method == 'POST':
-        # try:
-        # with database.atomic():
         Sold.create(
             buyer_name     = request.form['name'],
             buyer_address  = request.form['alamat'],
@@ -133,13 +117,7 @@ def input_product():
             total          = request.form['total'],
             sold_at        = datetime.datetime.now().strftime("%Y-%m-%d")
         )
-        # export()
-        flash('Data berhasil di input')
-            # auth_user(user)
         return redirect(url_for('input_product'))
-
-        # except IntegrityError:
-        #     flash('Username already exist')
     return render_template('index.html')
 
 from flask_paginate import Pagination, get_page_args
@@ -168,3 +146,45 @@ def show_data():
                            users=users,
                            pagination=pagination,
                            )
+
+@app.route('/download', methods = ['GET', 'POST'])
+def export():
+    con = database
+    # cursor = config.cursor()
+    sql_query = pd.read_sql_query("""SELECT * FROM Sold""", con)
+    from_date = request.form['from_date']
+    to_date = request.form['to_date']
+    to_date = to_date+' 23:59:59'
+    
+    df = pd.DataFrame(sql_query)
+    filtered_df = df.loc[(df['sold_at'] >= from_date) & (df['sold_at'] <= to_date)]
+    filtered_df.to_excel(r'/home/niahizkia/projects/web_project/static/file/export.xlsx', index = False) # place 'r' before the path name
+    return redirect(url_for('static', filename='file/export.xlsx'))
+    
+
+@app.route('/edit', methods=['POST','GET'])
+@login_required
+def edit_product():
+    user = Sold.get(
+        (Sold.id == request.form['user_id'])
+    )
+    return render_template('edit.html', user=user)
+
+@app.route('/update/<int:user_id>', methods=['POST','GET'])
+def update(user_id):
+    
+    if request.method == 'POST':
+        user = Sold.select().where(Sold.id == user_id).get()
+        user.buyer_name     = request.form['name']
+        user.buyer_address  = request.form['alamat']
+        user.region         = request.form['provinsi']
+        user.city           = request.form['kota']
+        user.phone_number   = request.form['phone']
+        user.bought_product = request.form['product']
+        user.quantity       = request.form['quantity']
+        user.total          = request.form['total']
+        # sold_at        = datetime.datetime.now().strftime("%Y-%m-%d")
+        user.save()
+        return redirect(url_for('show_data'))
+    else:
+        return render_template('show_data.html')

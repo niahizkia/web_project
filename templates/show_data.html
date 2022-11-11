@@ -19,6 +19,7 @@
         <th class="column100 column8" data-column="column8">Produk</th>
         <th class="column100 column9" data-column="column9">Jumlah</th>
         <th class="column100 column10" data-column="column10">Total</th>
+        <th class="column100 column11" data-column="column11">Action</th>
         </tr>
         </thead>
         <tbody>
@@ -34,6 +35,9 @@
             <td class="column100 column8" data-column="column8">{{ user.bought_product }}</td>
             <td class="column100 column9" data-column="column9">{{ user.quantity }}</td>
             <td class="column100 column10" data-column="column10">{{ user.total }}</td>
+            <form action="{{url_for('edit_product')}}" method="post">
+                <td class="column100 column11" data-column="column11"> <input type="hidden" name="user_id" value="{{ user.id }}" ><input type="submit" value="Edit" class="btn btn-secondary btn-sm"> </td>
+            </form>
         </tr>
         {% endfor %}
         </tbody>
